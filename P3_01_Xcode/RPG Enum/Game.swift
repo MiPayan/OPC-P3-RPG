@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Game {
+final class Game {
     
     private var players = [Player]()
     private let maximumNumberOfSelectablePlayers = 2
@@ -21,6 +21,11 @@ class Game {
         players[(turns + 1) % 2]
     }
     
+    private var exitGame: () {
+        print("See you later. 👋🏼")
+    }
+
+    
     func start() {
         print("""
             Hi! What do you want to do? (For make your choice, enter 1 or 2)
@@ -33,7 +38,7 @@ class Game {
             case "1":
                 createPlayers()
             case "2":
-                exitGame()
+                exitGame
             default:
                 print("🤞🏼 You must choose between 1 and 2. Try again! 🤞🏼")
                 start()
@@ -71,18 +76,11 @@ class Game {
     private func selectCharacterForEachPlayer() {
         for i in 0..<players.count {
             let player = players[i]
-
-            if i == 1 {
-                player.makeYourTeamBySelectingCharacters(players[0].characters)
-            } else {
-                player.makeYourTeamBySelectingCharacters(nil)
-            }
-            
+            i == 1 ? player.makeYourTeamBySelectingCharacters(players[0].characters) : player.makeYourTeamBySelectingCharacters(nil)
             print("✅ \(player.name) is ready! ✅")
         }
         print("⚠️ How to play? Same as character selection. Select your character to attack or heal, and after, select your target. ⚠️")
         print("Let's go to fight!")
-        
         makeFight()
     }
     
@@ -91,10 +89,15 @@ class Game {
         getsRandomBonus(fightingCharacter: fightingCharacter)
         
         let targetCharacter = chooseTarget(fightingCharacter)
-        fightingCharacter.attackOrHeal(targetCharacter)
+        fightingCharacter.attack(targetCharacter)
         
-        if targetPlayer.isDefeat() {
-            print("⚰️ All of your characters are dead.. Sorry, \(targetPlayer.name) you lost. ⚰️")
+        if targetPlayer.isDefeat {
+            guard let lastCharacterAlive = targetPlayer.characters.last?.characterType else { return }
+            if lastCharacterAlive == .priest {
+                print("🫥 The priest was the only survivor. He got scared and fled. Sorry, \(targetPlayer.name) you lost. 🫥")
+            } else {
+                print("⚰️ All of your characters are dead.. Sorry, \(targetPlayer.name) you lost. ⚰️")
+            }
             statistics()
         } else {
             turns += 1
@@ -135,7 +138,7 @@ class Game {
     }
     
     private func statistics() {
-        guard let winner = players.filter({ !$0.isDefeat() }).first else { return }
+        guard let winner = players.filter({ !$0.isDefeat }).first else { return }
         
         print("""
             ❌ THE GAME IS OVER ❌
@@ -143,9 +146,5 @@ class Game {
             ♻️ The game was finished in \(turns)turns. ♻️
             🎁 Bonus number: \(bonusCount) 🎁
             """)
-    }
-    
-    private func exitGame() {
-        print("See you later. 👋🏼")
     }
 }

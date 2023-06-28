@@ -7,7 +7,7 @@
 
 import Foundation
 
-class HandsNude: Weapon {
+final class HandsNude: Weapon {
     init() {
         super.init(damage: 10, nameWeapon: "Hands Nude")
     }

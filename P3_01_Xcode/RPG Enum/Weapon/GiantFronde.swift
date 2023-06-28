@@ -7,7 +7,7 @@
 
 import Foundation
 
-class GiantFronde: Weapon {
+final class GiantFronde: Weapon {
     init() {
         super.init(damage: 20, nameWeapon: "Giant Fronde")
     }

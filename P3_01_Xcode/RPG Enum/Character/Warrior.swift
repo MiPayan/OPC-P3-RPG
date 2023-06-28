@@ -7,8 +7,14 @@
 
 import Foundation
 
-class Warrior: Character {
+final class Warrior: Character {
     init(name: String) {
-        super.init(name: name, characterType: .warrior, lifePoint: 90, maxHealt: 90, weapon: TwoHendedSword())
+        super.init(
+            name: name,
+            characterType: .warrior,
+            lifePoint: 90,
+            maxHealt: 90,
+            weapon: TwoHendedSword()
+        )
     }
 }

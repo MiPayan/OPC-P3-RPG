@@ -7,7 +7,7 @@
 
 import Foundation
 
-class TreeTrunk: Weapon {
+final class TreeTrunk: Weapon {
     init() {
         super.init(damage: 10, nameWeapon: "Tree Trunk")
     }

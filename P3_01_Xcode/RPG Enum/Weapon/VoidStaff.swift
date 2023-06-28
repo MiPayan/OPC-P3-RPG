@@ -7,7 +7,7 @@
 
 import Foundation
 
-class VoidStaff: Weapon {
+final class VoidStaff: Weapon {
     init() {
         super.init(damage: 35, nameWeapon: "Void Staff")
     }

@@ -14,23 +14,28 @@ class Character {
     var weapon: Weapon
     var lifePoint: Int {
         willSet {
-            if newValue > lifePoint {
-                print("\(name) is about to get heal")
-            } else {
-                print("\(name) is about to get attack")
-            }
+            newValue > lifePoint ? print("\(name) is about to get heal") : print("\(name) is about to get attack")
         }
         
         didSet {
-            if oldValue > lifePoint {
-                print("\(name) lose \(oldValue - lifePoint)HP.")
-            } else {
-                print("\(name) has been healed.. +\(lifePoint - oldValue)HP.")
-            }
+            oldValue > lifePoint ? print("\(name) lose \(oldValue - lifePoint)HP.") : print("\(name) has been healed.. +\(lifePoint - oldValue)HP.")
         }
     }
     
-    init(name: String, characterType: CharacterType, lifePoint: Int, maxHealt: Int, weapon: Weapon) {
+    var showStatus: String {
+        isDead ? "\(characterType) \(name) is dead in the fight." : "\(characterType) \(name) -- \(lifePoint)/\(maxHealth)HP -- \(weapon.damage)Damages."
+    }
+    
+    var isDead: Bool {
+        lifePoint <= 0 ? true : false
+    }
+    
+    init(name: String,
+         characterType: CharacterType,
+         lifePoint: Int,
+         maxHealt: Int,
+         weapon: Weapon
+    ) {
         self.name = name
         self.characterType = characterType
         self.lifePoint = lifePoint
@@ -39,39 +44,24 @@ class Character {
     }
     
     
-    func attackOrHeal(_ target: Character) {
+    func attack(_ target: Character) {
         target.lifePoint -= weapon.damage
     }
-    
-    func isDead() -> Bool {
-        if lifePoint <= 0 {
-            return true
-        }
-        return false
-    }
-    
-    func showStatus() -> String {
-        if isDead() {
-            return "\(characterType) \(name) is dead in the fight."
-        } else {
-            return "\(characterType) \(name) -- \(lifePoint)/\(maxHealth)HP -- \(weapon.damage)Damages."
-        }
-    }
-    
+        
     func addBonusToWeapon() {
-        if let warrior = self as? Warrior  {
-            warrior.weapon = DoubleSwords()
+        switch characterType {
+        case .warrior:
+            weapon = DoubleSwords()
             print("Good, your \(CharacterType.warrior)(\(name)) has unlocked a weapon: \(weapon.name), + 10 damage. Check out your new stats 😊.")
-        } else if let colossus = self as? Colossus {
-            colossus.weapon = GiantFronde()
+        case .colossus:
+            weapon = GiantFronde()
             print("Good, your \(CharacterType.colossus)(\(name)) has unlocked a weapon: \(weapon.name), + 10 damage. Check out your new stats 😊.")
-        } else if let magus = self as? Magus {
-            magus.weapon = VoidStaff()
+        case .magus:
+            weapon = VoidStaff()
             print("Good, your \(CharacterType.magus)(\(name)) has unlocked a weapon: \(weapon.name), + 10 damage. Check out your new stats 😊.")
-            
-        } else if let priest = self as? Priest {
-            priest.weapon = TibetanBowl()
-            print("Good, your \(CharacterType.priest)(\(name)) has unlocked a weapon: \(weapon.name), + 10 damage. Check out your new stats 😊.")
+        case .priest:
+            weapon = TibetanBowl()
+            print("Good, your \(CharacterType.priest)(\(name)) has unlocked a weapon: \(weapon.name), + 10 of healling. Check out your new stats 😊.")
         }
     }
 }

@@ -7,20 +7,16 @@
 
 import Foundation
 
-class Priest: Character {
+final class Priest: Character {
     init(name: String) {
         super.init(name: name, characterType: .priest, lifePoint: 90, maxHealt: 90, weapon: HandsNude())
     }
     
-    override func showStatus() -> String {
-        if isDead() {
-            return super.showStatus()
-        } else {
-            return "\(characterType) \(name) -- \(lifePoint)/\(maxHealth)HP -- \(weapon.damage)heal"
-        }
+    override var showStatus: String {
+        isDead ? super.showStatus : "\(characterType) \(name) -- \(lifePoint)/\(maxHealth)HP -- \(weapon.damage)heal"
     }
     
-    override func attackOrHeal(_ target: Character) {
+    override func attack(_ target: Character) {
         if target.lifePoint >= target.maxHealth {
             print("Sorry, you are already full life.")
         } else if target.lifePoint + weapon.damage > target.maxHealth {
